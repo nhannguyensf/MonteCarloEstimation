@@ -55,7 +55,7 @@ def solve_n_queens_monte_carlo_with_timing(n):
     execution_time = end_time - start_time
     return board, node_count, execution_time
 
-def plot_queens(board):
+def plot_queens(board, run_no):
     """Plot the positions of queens on a chess board with a checkerboard pattern."""
     n = len(board)
     grid = np.zeros((n, n))
@@ -75,15 +75,22 @@ def plot_queens(board):
 
     plt.xticks(np.arange(0, n, 1))
     plt.yticks(np.arange(0, n, 1))
-    plt.title('12-Queens Solution')
+    plt.title(f'12-Queens Solution ({run_no})')
     plt.show()
 
 # Now we will run the program to solve the 12-Queens problem using Monte Carlo approach and plot the solution
-n_queens = 12
-solution_board_mc, node_count_mc, execution_time_mc = solve_n_queens_monte_carlo_with_timing(n_queens)
-if solution_board_mc:
-    print(f"Execution Time: {execution_time_mc:.9f} seconds")
-    print(f"Node Counted: ", node_count_mc)
-    plot_queens(solution_board_mc)
-else:
-    print("No solution found.")
+total_time = 0
+total_counts = 0
+for i in range(10):
+    n_queens = 12
+    solution_board_mc, node_count_mc, execution_time_mc = solve_n_queens_monte_carlo_with_timing(n_queens)
+    if solution_board_mc:
+        print(f'Execution Time: {execution_time_mc:.9f} seconds')
+        print(f'Node Counted: ', node_count_mc)
+        total_time += execution_time_mc
+        total_counts += node_count_mc
+        plot_queens(solution_board_mc, i)
+    else:
+        print('No solution found.')
+print('Total time: ', total_time)
+print('Total nodes counted: ', total_counts)
