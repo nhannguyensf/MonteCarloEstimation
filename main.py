@@ -1,7 +1,7 @@
+import random
+import time
 import matplotlib.pyplot as plt
 import numpy as np
-import time
-import random
 
 def is_safe(board, row, col):
     # Check this row on left side
@@ -48,30 +48,42 @@ def solve_n_queens_monte_carlo(n):
         return False, node_count[0]
     return board, node_count[0]
 
-def monte_carlo_simulation(runs, n):
-    times = []
-    nodes_counts = []
-    for _ in range(runs):
-        start_time = time.time()
-        solution, nodes = solve_n_queens_monte_carlo(n)
-        end_time = time.time()
-        times.append(end_time - start_time)
-        nodes_counts.append(nodes)
-    return times, nodes_counts
+def solve_n_queens_monte_carlo_with_timing(n):
+    start_time = time.time()
+    board, node_count = solve_n_queens_monte_carlo(n)
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return board, node_count, execution_time
 
 def plot_queens(board):
-    """Plot the positions of queens on the chess board."""
+    """Plot the positions of queens on a chess board with a checkerboard pattern."""
     n = len(board)
     grid = np.zeros((n, n))
 
+    # Create a checkerboard pattern
+    grid[1::2, ::2] = 1
+    grid[::2, 1::2] = 1
+
+    plt.imshow(grid, cmap='gray', interpolation='none')
+    plt.grid(which='major', axis='both', linestyle='-', color='black', linewidth=2)
+
+    # Place queens on the board
     for i in range(n):
         for j in range(n):
             if board[i][j] == 1:
-                grid[i, j] = 1
+                plt.text(j, i, '♛', fontsize=20, ha='center', va='center', color='red')
 
-    plt.imshow(grid, cmap='gray', interpolation='none')
-    plt.grid(which='major', axis='both', linestyle='--', color='yellow', linewidth=2)
     plt.xticks(np.arange(0, n, 1))
     plt.yticks(np.arange(0, n, 1))
     plt.title('12-Queens Solution')
     plt.show()
+
+# Now we will run the program to solve the 12-Queens problem using Monte Carlo approach and plot the solution
+n_queens = 12
+solution_board_mc, node_count_mc, execution_time_mc = solve_n_queens_monte_carlo_with_timing(n_queens)
+if solution_board_mc:
+    print(f"Execution Time: {execution_time_mc:.9f} seconds")
+    print(f"Node Counted: ", node_count_mc)
+    plot_queens(solution_board_mc)
+else:
+    print("No solution found.")
